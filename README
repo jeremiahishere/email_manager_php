@@ -1,0 +1,3 @@
+Quick and dirty email manager to send and debug emails.
+
+It is a wrapper around mail() that stores the email information into a database.  It also stores a variety of debugging information like the line number and send time.  The user can add an additional debugging array when sending the email.  Email sending can be disabled for debugging purposes.
