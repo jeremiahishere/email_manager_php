@@ -221,7 +221,7 @@ class Emailer  {
 
   //sends mail but uses default headers
   public function send_email_with_default_headers($to, $subject, $message, $debug_options)  {
-    $this->send_email($to, $subject, $message, $this->default_headers, $debug_options);
+    return $this->send_email($to, $subject, $message, $this->default_headers, $debug_options);
   }
 
   //save an email message into the database and set it ready to be sent when send_queued_email is called
