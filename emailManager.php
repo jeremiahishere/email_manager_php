@@ -118,6 +118,8 @@ class Emailer  {
       //currently printing a message, maybe just fail silently?
       print("Log level {$debug_log_level} not supported.  Allowable values are self::\$LOG_FULL, self::\$LOG_PARTIAL, self::\$LOG_MINIMAL, self::\$LOG_DISABLED");
     }
+    //set the file depth for backtraces
+    $this->file_depth = $file_depth;
     $this->set_default_debug_options();
     $this->file_exec_id = $this->save_file_exec_info();
   }
