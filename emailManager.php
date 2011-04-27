@@ -96,8 +96,15 @@ class Emailer  {
   private $mail_count;
   private $file_exec_id; //links the email to the file name and start time
 
+  //depth of the file in the backtrace to get the correct file name and line number
+  //0 = current file
+  //1 = file calling this one (used if the constructor is called in an include)
+  //etc 
+  //there are no checks to see if the file depth goes out of bounds on the backtrace
+  private $file_depth;
+
   //watch out for the fun hack for setting the default value for debug_log_level to LOG_PARTIAL
-  public function __construct($client_database, $debug_log_level = NULL, $enable_email_send = true)  {
+  public function __construct($client_database, $debug_log_level = NULL, $enable_email_send = true, $file_depth = 0)  {
     $this->database = $client_database;
     //make this actually evaluate to true/false
     $this->enable_email_send = (bool)$enable_email_send;
@@ -139,7 +146,7 @@ class Emailer  {
     $backtrace = debug_backtrace();
     //backtrace[0] will be this file, this location
     //backtrace[max] should be the calling file
-    $size = count($backtrace) - 1;
+    $size = count($backtrace) - (1 + $this->file_depth);
     //$debug_options['line_number'] = $backtrace[$size]['line'];
     $this->default_debug_options['file_name'] = $backtrace[$size]['file'];
 
@@ -177,7 +184,7 @@ class Emailer  {
     $backtrace = debug_backtrace();
     //backtrace[0] will be this file, this location
     //backtrace[max] should be the calling file
-    $size = count($backtrace) - 1;
+    $size = count($backtrace) - (1 + $this->file_depth);
     $array['line_number'] = $backtrace[$size]['line'];
     
     $array['mail_count'] = $this->mail_count;
@@ -242,7 +249,7 @@ class Emailer  {
   public function send_all_queued_email()  {
     //get the file name of the calling file
     $backtrace = debug_backtrace();
-    $size = count($backtrace) - 1;
+    $size = count($backtrace) - (1 + $this->file_depth);
     $file_name = $backtrace[$size]['file'];
 
     //find all unsent emails from the current file run
